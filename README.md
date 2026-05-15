@@ -1,123 +1,244 @@
-# 🤖 AI Job Market Risk Analyzer
+<div align="center">
 
-## CAI3101: Introduction to Artificial Intelligence Project
+# 🤖 Will I Get Fired?
+### *A machine learning project that tells you whether robots are coming for your job.*
+> *(Spoiler: probably yes, but at least we built a pretty dashboard about it.)*
 
-### 📌 Project Overview
-This project is an end-to-end Machine Learning application designed to predict the likelihood of human jobs being replaced by Artificial Intelligence. It fulfills the CAI3101 course requirements by demonstrating the complete ML lifecycle: data collection, preprocessing, model development (including Neural Networks), and deployment.
+<br>
 
-### 🌟 Features
-*   **Data Analysis:** Interactive dashboard to explore job market trends, correlations, and risk distributions.
-*   **Predictive Modeling:** Compares four powerful algorithms:
-    *   **Random Forest Classifier** (Ensemble Learning)
-    *   **Naive Bayes** (Probabilistic Learning)
-    *   **Decision Tree** (Logic-based Learning)
-    *   **Neural Network (MLP)** (Deep Learning) - *Advanced Requirement!*
-*   **Interactive Risk Analyzer:** Users can input job details (Salary, Remote Work, Education, etc.) to get a real-time risk assessment.
-*   **Actionable Insights:** Provides clear feedback on whether a job is "Safe", "Moderate", or "Critical Risk".
+[![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
+[![Streamlit](https://img.shields.io/badge/Streamlit-Live-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://xoa-ml.streamlit.app)
+[![scikit-learn](https://img.shields.io/badge/scikit--learn-ML-F7931E?style=for-the-badge&logo=scikit-learn&logoColor=white)](https://scikit-learn.org)
+[![Plotly](https://img.shields.io/badge/Plotly-Charts-3F4F75?style=for-the-badge&logo=plotly&logoColor=white)](https://plotly.com)
+[![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
 
-### 📚 Documentation
-We have prepared detailed documentation for every aspect of this project:
+<br>
 
-1.  **[Project Requirements Explained](docs/REQUIREMENTS_EXPLAINED.md)** - Read this for the **Written Report** and **PowerPoint**.
-2.  **[Installation Guide](docs/INSTALLATION_GUIDE.md)** - Step-by-step instructions to run the project locally.
-3.  **[Deployment Guide](docs/DEPLOYMENT_GUIDE.md)** - How to get a public URL using Streamlit Community Cloud (GitHub).
-4.  **[Gap Analysis](docs/GAP_ANALYSIS.md)** - A checklist of how we met all course requirements.
+### 🚀 [Try the Live App → xoa-ml.streamlit.app](https://xoa-ml.streamlit.app)
 
-### 🛠️ Libraries & Imports Explained
+<br>
 
-The project uses several powerful Python libraries. Here is a breakdown of why each one is used:
+*Built for CAI3101 · Arab Academy for Science, Technology & Maritime Transport · Term 5*
 
-*   **`streamlit`**: The core framework used to build the web application. It allows us to create interactive UIs (buttons, sliders, charts) using simple Python code, without needing HTML/CSS/JS.
-*   **`pandas`**: The standard library for data manipulation. We use it to load the CSV file (`pd.read_csv`), clean data (`dropna`), and handle the table-like structure of our dataset.
-*   **`seaborn` & `matplotlib.pyplot`**: Visualization libraries used to generate static charts, specifically the **Correlation Heatmap**. `seaborn` makes the heatmap look good, while `matplotlib` provides the underlying figure.
-*   **`plotly.express`**: An interactive plotting library. We use it for the **Risk Distribution Histogram** because it allows users to hover over bars to see exact numbers.
-*   **`sklearn.model_selection.train_test_split`**: A utility to split our data into two parts: Training (80%) and Testing (20%). This ensures we evaluate our models on data they haven't seen before.
-*   **`sklearn.metrics.accuracy_score`**: The metric used to grade our models. It simply calculates what percentage of predictions were correct.
-*   **`sklearn.ensemble.RandomForestClassifier`**: A powerful model that uses many decision trees to vote on the outcome. Great for high accuracy.
-*   **`sklearn.naive_bayes.GaussianNB`**: A probabilistic model based on Bayes' Theorem. Fast and simple, often used as a baseline.
-*   **`sklearn.tree.DecisionTreeClassifier`**: A model that learns simple if-then rules. Easy to visualize and explain.
-*   **`sklearn.neural_network.MLPClassifier`**: A Multi-Layer Perceptron (Artificial Neural Network). It mimics the human brain's structure to learn complex, non-linear patterns in the data.
-*   **`sklearn.preprocessing.LabelEncoder`**: Converts text categories (e.g., "Engineer", "Doctor") into numbers (0, 1) so the models can process them.
-*   **`sklearn.preprocessing.StandardScaler`**: Normalizes numerical data (like Salary) so that all features have a mean of 0. This is crucial for the Neural Network to learn effectively.
+</div>
 
-### 📂 File Structure & Purpose
+---
 
-Here is a detailed explanation of every file in the repository:
+## 🤔 What Is This?
 
-*   **`app.py`**: **The Frontend.** This is the main entry point of the application. It handles:
-    *   Displaying the Streamlit UI (tabs, sidebar, charts).
-    *   Taking user input.
-    *   Calling `model_utils` to get predictions.
-    *   Displaying results to the user.
-*   **`model_utils.py`**: **The Backend Logic.** This file contains the "business logic" to keep `app.py` clean. It handles:
-    *   Loading and cleaning the data from CSV.
-    *   Training the machine learning models.
-    *   Encoding and scaling features.
-    *   It uses `@st.cache_data` to ensure we don't re-train models every time the user clicks a button.
-*   **`data.csv`**: **The Dataset.** Contains the rows of job data (Salary, Industry, Risk %, etc.) used to train our AI.
-*   **`requirements.txt`**: **Dependency List.** Tells the server (or your computer) which Python libraries to install to run the app.
-*   **`tests/`**: **Quality Assurance.** A folder containing unit tests (e.g., `test_app.py`) to verify that the data loads correctly and models train without errors.
-*   **`docs/`**: **Documentation.** Contains detailed guides for Installation, Deployment, and Course Requirements.
-*   **`.gitignore`**: **Configuration.** Tells Git which files to ignore (like temporary `__pycache__` files) to keep the repository clean.
+A full end-to-end Machine Learning application that predicts how likely your job is to be automated away by AI. We trained **4 machine learning models** on **30,000 job records** and wrapped everything in a slick interactive dashboard so you can find out — with scientific precision — whether you should start updating your resume.
 
-### 🔍 Codebase Deep Dive (How it Works)
+The models look at your job's title, industry, salary, education requirements, AI impact level, and a bunch of other features, then classify your role into one of 5 risk levels: from *Very Safe* (keep calm) all the way to *Critical Risk* (panic responsibly).
 
-This section explains the internal logic of the application for developers and instructors. The code is split into two main files to follow software engineering best practices (Separation of Concerns).
+*We, the engineers who built this classifier, received a "Safe" rating. We are choosing to believe the model is correct.*
 
-#### 1. The Brain: `model_utils.py`
-This file contains all the "heavy lifting" logic for Machine Learning. It is separated from the UI to ensure the code is clean, reusable, and testable.
+---
 
-*   **`load_and_process_data(file_path)`**
-    *   **Missing Values:** Automatically removes incomplete rows using `df.dropna()`.
-    *   **Target Engineering:** The raw dataset has a percentage risk (0-100%). We convert this into 5 distinct classes (0=Very Safe, 4=Critical) to make it a Classification problem.
-    *   **Label Encoding:** Converts text columns (e.g., "Industry: Tech") into numbers (e.g., 0, 1, 2) so the algorithms can understand them.
-    *   **Feature Scaling:** Uses `StandardScaler` to normalize numerical data (like Salary). This is **critical** for the Neural Network and Naive Bayes to work correctly.
-    *   **Caching:** We use `@st.cache_data` so this expensive process happens only once when the app loads, not every time you click a button.
+## 📸 Screenshots
 
-*   **`train_models(X_train, y_train)`**
-    *   Initializes four distinct models:
-        *   `RandomForestClassifier`: Robust, good for general purpose.
-        *   `GaussianNB`: Fast, probabilistic baseline.
-        *   `DecisionTreeClassifier`: Simple, easy to interpret rules.
-        *   `MLPClassifier`: A Neural Network with 2 hidden layers (100 and 50 neurons) to capture complex non-linear patterns.
-    *   Trains all models on the provided training data.
-    *   Returns a dictionary of trained models ready for prediction.
+> **💡 To add screenshots:** Run the app locally (`streamlit run app.py`), take screenshots of each tab, and save them to `docs/screenshots/`. Then replace the placeholder paths below.
 
-#### 2. The Face: `app.py`
-This is the Streamlit application that users interact with.
+<table>
+  <tr>
+    <td align="center">
+      <strong>🏠 Hero + Data Explorer</strong><br>
+      <img src="docs/screenshots/01_hero.png" alt="Hero section with stat cards and data explorer tab" width="100%"/>
+    </td>
+    <td align="center">
+      <strong>⚙️ Model Lab</strong><br>
+      <img src="docs/screenshots/02_model_lab.png" alt="Model comparison cards and accuracy chart" width="100%"/>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <strong>🎯 Risk Analyzer — Input Form</strong><br>
+      <img src="docs/screenshots/03_risk_input.png" alt="Job parameters input form" width="100%"/>
+    </td>
+    <td align="center">
+      <strong>📊 Risk Analyzer — Result + Gauge</strong><br>
+      <img src="docs/screenshots/04_risk_result.png" alt="Gauge chart and risk result card" width="100%"/>
+    </td>
+  </tr>
+</table>
 
-*   **Page Setup:** Configures the page title, icon, and wide layout.
-*   **Tab Structure:**
-    *   **Tab 1 (Data):** Displays raw data, summary statistics, and visualizations (Histograms, Heatmaps) using `plotly` and `seaborn`.
-    *   **Tab 2 (Model):** Splits the data (80% Train / 20% Test), trains the models, and displays a bar chart comparing their Accuracy scores.
-    *   **Tab 3 (Prediction):**
-        *   Collects user inputs via Sidebar/Columns (Sliders, Dropdowns).
-        *   **Preprocessing consistency:** It ensures user input is encoded and scaled exactly the same way as the training data using the saved `encoders` and `scaler` from `model_utils.py`.
-        *   **Inference:** Feeds the processed input into the selected model to get a prediction (0-4).
-        *   **Interpretation:** Maps the predicted number (e.g., "3") to a human-readable string (e.g., "High Risk") and displays it with appropriate colors (Red/Green).
+---
 
-### 🚀 Quick Start (Local)
+## ✨ Features
 
-1.  **Install Dependencies:**
-    ```bash
-    pip install -r requirements.txt
-    ```
-2.  **Run the App:**
-    ```bash
-    streamlit run app.py
-    ```
-2.  **Running the app online :**
-    ```bash
-    [https://xoa-ml.streamlit.app/]
-    ```
-### ⚙️ Technical Highlights
-*   **Refactored Codebase:** Logic is separated into `model_utils.py` for cleaner code and better caching.
-*   **Unit Tests:** comprehensive tests in `tests/` ensure data integrity and model stability.
-*   **Advanced ML:** Implements Multi-Layer Perceptron (MLP) for non-linear pattern recognition.
+| Feature | Description |
+|---|---|
+| 📊 **Data Explorer** | 6 interactive Plotly charts — distributions, correlations, salary breakdowns |
+| 🧠 **4 ML Models** | Random Forest, Neural Network (MLP), Decision Tree, Naive Bayes |
+| 🏆 **Model Comparison** | Side-by-side accuracy cards with gold crown on the winner |
+| 🎯 **Risk Gauge** | Visual speedometer showing your job's automation risk level |
+| 🎨 **Color-Coded Results** | Each risk grade has its own gradient color scheme and actionable tip |
+| 📈 **Confidence Breakdown** | Per-class probability bars so you see how sure the model is |
+| ⚡ **Cached Training** | Models train once and are cached — no waiting on every click |
+| 🧪 **Unit Tests** | 4 automated tests covering data loading, feature consistency, and model training |
 
-### 👥 Contributors
-Omar Hossam Eldin  Metwally GAd  
-Mohamed Ahmed Ezzat Mohamed Elsayed
-Belal Ashraf Sobhy Mohamed Hassan
+---
 
-*Submitted for CAI3101 - Term 5*
+## 🧠 How It Works (The 30-Second Version)
+
+```
+Your job details  →  Label Encode text  →  StandardScale numbers
+       ↓
+  Random Forest (or whichever model you pick)
+       ↓
+  Risk Grade: 0 (Very Safe) → 4 (Critical Risk)
+       ↓
+  "You might want to learn prompt engineering."
+```
+
+More formally:
+
+1. **Data** — 30,000 job records with 12 features (title, industry, salary, AI impact, etc.)
+2. **Preprocessing** — Text columns encoded with `LabelEncoder`, numerical columns normalized with `StandardScaler`
+3. **Target Engineering** — Continuous `Automation Risk (%)` converted to 5 discrete classes
+4. **Training** — 80/20 train-test split, 4 algorithms trained in parallel
+5. **Evaluation** — Accuracy, Precision, Recall, F1-score, Confusion Matrix
+6. **Deployment** — Streamlit app with live prediction on new inputs
+
+---
+
+## 📊 Model Results
+
+Evaluated on a 20% held-out test set (6,000 samples the models never saw during training):
+
+| Rank | Model | Test Accuracy | Type |
+|:---:|---|:---:|---|
+| 🥇 | **Random Forest** | Highest | Ensemble (100 trees) |
+| 🥈 | Neural Network (MLP) | Second | Deep Learning (2 hidden layers) |
+| 🥉 | Decision Tree | Third | Logic-based |
+| 4 | Naive Bayes | Fourth | Probabilistic baseline |
+
+> **Random Forest wins** because averaging 100 trees cancels out the noise that kills a single tree's generalization. Also it's just really good at everything. We love Random Forest.
+
+---
+
+## 🛠️ Tech Stack
+
+| Layer | Technology | Why |
+|---|---|---|
+| **Web App** | [Streamlit](https://streamlit.io) | Python → interactive UI, no HTML/CSS needed |
+| **ML** | [scikit-learn](https://scikit-learn.org) | Industry-standard ML library |
+| **Data** | [pandas](https://pandas.pydata.org) | DataFrame manipulation |
+| **Charts** | [Plotly](https://plotly.com) | Interactive, hoverable, beautiful |
+| **Preprocessing** | LabelEncoder + StandardScaler | Text → numbers, scale normalization |
+| **Testing** | pytest | 4 automated tests for data and model integrity |
+
+---
+
+## 📁 Project Structure
+
+```
+will-i-get-fired/
+│
+├── app.py               ← Streamlit frontend (UI, charts, prediction form)
+├── model_utils.py       ← Backend ML logic (loading, training, caching)
+├── data.csv             ← Dataset: 30,000 jobs × 13 features
+├── requirements.txt     ← Python dependencies
+│
+├── tests/
+│   └── test_app.py      ← 4 unit tests (data loading, features, models)
+│
+├── docs/
+│   ├── PROJECT_REPORT.md         ← Full written report (use for PDF submission)
+│   ├── REQUIREMENTS_EXPLAINED.md ← How we meet each course requirement
+│   ├── INSTALLATION_GUIDE.md     ← Local setup walkthrough
+│   ├── DEPLOYMENT_GUIDE.md       ← Streamlit Cloud deployment steps
+│   ├── GAP_ANALYSIS.md           ← Requirement checklist
+│   └── screenshots/              ← Add your screenshots here
+│
+├── JobRiskInsights.ipynb  ← Full Jupyter notebook (all 11 required sections)
+└── Final_Project_Description.md  ← Course project brief
+```
+
+---
+
+## 🚀 Run It Locally
+
+**Step 1 — Clone:**
+```bash
+git clone https://github.com/4awmy/will-i-get-fired.git
+cd will-i-get-fired
+```
+
+**Step 2 — Install dependencies:**
+```bash
+pip install -r requirements.txt
+```
+
+**Step 3 — Launch:**
+```bash
+streamlit run app.py
+```
+
+The app opens at `http://localhost:8501` — no configuration needed.
+
+**Step 4 — Run tests (optional but responsible):**
+```bash
+pytest tests/
+```
+
+---
+
+## 📓 Jupyter Notebook
+
+The complete analysis notebook (`JobRiskInsights.ipynb`) contains all 11 required sections:
+
+1. Problem Understanding
+2. Dataset Description
+3. Data Exploration (EDA)
+4. Data Visualization (6 charts with explanations)
+5. Data Preprocessing (5 steps with reasoning)
+6. Model Training (4 algorithms)
+7. Model Comparison
+8. Model Improvement (overfitting experiment)
+9. Model Evaluation (Precision, Recall, F1, Confusion Matrix)
+10. Prediction Demo
+11. Final Discussion
+
+Run it with `jupyter notebook JobRiskInsights.ipynb` or open in VS Code.
+
+---
+
+## 📋 Risk Levels Explained
+
+| Grade | Label | Risk Range | What It Means |
+|:---:|---|:---:|---|
+| 0 | 🟢 Very Safe | 0–20% | Robots can't replace you. Congrats, you're creative. |
+| 1 | 🟡 Safe | 20–40% | AI is a tool for you, not a threat. For now. |
+| 2 | 🟠 Moderate | 40–60% | Hybrid role. Start learning something non-automatable. |
+| 3 | 🔴 High Risk | 60–80% | Update that LinkedIn. Just saying. |
+| 4 | ⛔ Critical Risk | 80–100% | Your job description reads like a Python script. |
+
+---
+
+## 👥 The Team
+
+> Three people who are now very anxious about their own career prospects.
+
+| Name |
+|---|
+| Omar Hossam Eldin Metwally Gad |
+| Mohamed Ahmed Ezzat Mohamed Elsayed |
+| Belal Ashraf Sobhy Mohamed Hassan |
+
+*Submitted for CAI3101 — Introduction to Artificial Intelligence · Term 5 · AAST*
+
+---
+
+## 📄 License
+
+[MIT](LICENSE) — use it, fork it, improve it. If a robot uses this project to automate your job, we accept no responsibility.
+
+---
+
+<div align="center">
+
+**Made with ☕ and existential dread about the future of work.**
+
+[⭐ Star this repo](https://github.com/4awmy/will-i-get-fired) · [🐛 Report a bug](https://github.com/4awmy/will-i-get-fired/issues) · [🚀 Live Demo](https://xoa-ml.streamlit.app)
+
+</div>
