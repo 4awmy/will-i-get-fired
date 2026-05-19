@@ -1,6 +1,6 @@
 # 📋 Project Requirements Explained
 
-This document details how the **AI Job Market Risk Analyzer** satisfies the CAI3101 course objectives. You can use this content for your **Written Report** and **PowerPoint Presentation**.
+This document details how the **AI Job Market Risk Analyzer** satisfies the CIT3601 course objectives. You can use this content for your **Written Report** and **PowerPoint Presentation**.
 
 ---
 
@@ -11,7 +11,7 @@ This document details how the **AI Job Market Risk Analyzer** satisfies the CAI3
 ## 2. Dataset Understanding
 *   **Source:** Synthetic/Public dataset representing Job Market trends.
 *   **Size:** 30,000 Samples (Exceeds the >200 requirement).
-*   **Features:** 13 variables including `Job Title`, `Industry`, `Salary`, `Remote Work Ratio`, `AI Impact Level`.
+*   **Features:** 13 dataset columns, of which 8 are used as model inputs: `Job Title`, `Industry`, `Job Status`, `Median Salary`, `Required Education`, `Experience`, `Remote Work Ratio`, `Location`. Four columns are excluded — `AI Impact Level` (circular), `Job Openings (2024)`, `Projected Openings (2030)`, and `Gender Diversity (%)` (macro/aggregate data).
 *   **Problem Type:** **Classification**. We are classifying jobs into 5 discrete risk categories (0: Very Safe to 4: Critical Risk).
 
 ## 3. Data Preprocessing (How we handled the data)

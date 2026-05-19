@@ -205,7 +205,7 @@ def main():
         🤖 AI Job Market Risk Analyzer
     </h1>
     <p style="text-align:center;color:#94a3b8;font-size:1rem;margin-bottom:28px;">
-        CAI3101 · AAST · End-to-End Machine Learning Project
+        CIT3601 · AAST · End-to-End Machine Learning Project
     </p>
     """, unsafe_allow_html=True)
 

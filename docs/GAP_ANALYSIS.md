@@ -1,6 +1,6 @@
 # 🛑 Gap Analysis & Missing Requirements
 
-This document outlines the discrepancies between the current project state, the CAI3101 course requirements, and your specific user requests.
+This document outlines the discrepancies between the current project state, the CIT3601 course requirements, and your specific user requests.
 
 ## 1. Course Requirements vs. Current State
 

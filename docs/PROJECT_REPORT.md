@@ -56,7 +56,7 @@ By working through each step, this project demonstrates that the practice of Dat
 
 ### 2.1 What Is the Problem?
 
-Given a set of observable characteristics about a job (job title, industry, required education, median salary, years of experience, AI impact level, job openings trend, remote work ratio, and location), can we accurately predict how likely that job is to be automated within the next decade?
+Given a set of observable characteristics about a job that a person would realistically know — job title, industry, employment trend, required education, median salary, years of experience, remote work ratio, and location — can we accurately predict how likely that job is to be automated within the next decade?
 
 ### 2.2 Why Is This Problem Important?
 
@@ -638,7 +638,7 @@ Random Forest's advantage over a single Decision Tree stems from **variance redu
 
 Random Forest's advantage over Naive Bayes stems from its ability to model **non-linear interactions** and its lack of the independence assumption. In theory, if job title interacted with industry to predict risk in a non-additive way, Random Forest could capture this but Naive Bayes could not.
 
-Random Forest's advantage over the Neural Network is more nuanced. On small-to-medium structured tabular datasets, tree-based methods often outperform neural networks because gradient descent optimization requires more data to converge to a good solution. With only 24,000 training samples and 12 features, the neural network may not have sufficient data to fully utilize its representational capacity.
+Random Forest's advantage over the Neural Network is more nuanced. On small-to-medium structured tabular datasets, tree-based methods often outperform neural networks because gradient descent optimization requires more data to converge to a good solution. With only 24,000 training samples and 8 features, the neural network may not have sufficient data to fully utilize its representational capacity.
 
 ### 12.3 Problems Encountered
 

@@ -43,7 +43,7 @@ def load_and_process_data(file_path):
 
     # 3. Encoding & Scaling
     encoders = {}
-    cat_cols = ['Job Title', 'Industry', 'Job Status', 'AI Impact Level', 'Required Education', 'Location']
+    cat_cols = ['Job Title', 'Industry', 'Job Status', 'Required Education', 'Location']
 
     # Store original DF for display, work on df_processed
     df_processed = df.copy()
