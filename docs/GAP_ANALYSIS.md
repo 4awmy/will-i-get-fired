@@ -6,9 +6,9 @@ This document outlines the discrepancies between the current project state, the 
 
 | Requirement | Current Status | Gap / Action Needed |
 | :--- | :--- | :--- |
-| **Dataset:** At least 200 samples & 5 features. | ✅ **Pass** (30,000 samples, 13 features). | None. |
-| **Data Understanding:** Describe source, stats, viz, problem type. | ⚠️ **Partial**. | The code has the *logic* (Tab 1), but the *Written Report* (PDF) is missing. The app displays stats/viz correctly. |
-| **Data Preprocessing:** Handle missing values, outliers. | ⚠️ **Basic**. | Code uses `dropna()`. We should check if outliers exist or if `dropna` removes too much data (though with 30k rows it's likely fine). |
+| **Dataset:** At least 200 samples & 5 features. | ✅ **Pass** (702 real U.S. occupations from Frey & Osborne 2013; 3 input features + target). | None. |
+| **Data Understanding:** Describe source, stats, viz, problem type. | ✅ **Pass**. | PROJECT_REPORT.md provides full academic documentation. The app displays stats/viz correctly in Tab 1. |
+| **Data Preprocessing:** Handle missing values, outliers. | ✅ **Pass**. | Code uses `dropna()` (defensive; no missing values in dataset). Class imbalance addressed with `class_weight='balanced'` across all models. |
 | **Data Preprocessing:** Encode & Scale. | ✅ **Pass**. | `LabelEncoder` and `StandardScaler` are implemented. |
 | **Model Development:** Choose **at least 3 models** (e.g., Naive Bayes, DT, **ANN**). | ⚠️ **Partial**. | We have Random Forest, Naive Bayes, Decision Tree. **Missing:** The prompt suggests "Artificial Neural Network" (ANN). We should replace one or add it as a 4th. |
 | **Model Evaluation:** Accuracy & Compare. | ✅ **Pass**. | Tab 2 compares models by accuracy. |

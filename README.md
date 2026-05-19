@@ -24,19 +24,28 @@
 
 ---
 
-## 🤔 What Is This?
+## 🤔 Introduction & Problem Statement
 
-A full end-to-end Machine Learning application that predicts how likely your job is to be automated away by AI. We trained **4 machine learning models** on **30,000 job records** and wrapped everything in a slick interactive dashboard so you can find out — with scientific precision — whether you should start updating your resume.
+Artificial Intelligence is reshaping the global economy and labor market. Advances in machine learning make it economically viable to automate cognitive and manual tasks. Understanding this risk is critical for workers, companies, and policymakers alike.
 
-You enter things you'd actually know about your job (title, industry, salary, experience, education, remote ratio, location) and the model classifies your role into one of 5 risk levels: from *Very Safe* (keep calm) all the way to *Critical Risk* (panic responsibly).
+This project implements a complete **end-to-end Data Science and Machine Learning workflow** to predict automation risk based on observable job characteristics.
 
-*We, the engineers who built this classifier, received a "Safe" rating. We are choosing to believe the model is correct.*
+### 🎯 Objective & Framing
+Given 3 characteristics drawn from the Frey & Osborne (2013) dataset (Occupation title, Education level, and Annual wage), the goal is to classify the job into one of **five discrete, ordinal risk levels** (0 = Very Safe, 1 = Safe, 2 = Moderate, 3 = High Risk, 4 = Critical Risk).
+
+This is framed as a **Multi-class Classification** problem to provide actionable granularity.
+
+### 👥 Key Beneficiaries
+* **Job Seekers / Students:** Assess long-term occupational safety before choosing a career path or college degree.
+* **HR Departments:** Predict which roles face high disruption and design proactive workforce transition plans.
+* **Policymakers:** Allocate educational funding, upskilling programs, and safety nets to the most vulnerable occupational segments.
+
 
 ---
 
 ## 📸 Screenshots
 
-> **💡 To add screenshots:** Run the app locally (`streamlit run app.py`), take screenshots of each tab, and save them to `docs/screenshots/`.
+The Streamlit web application dashboard consists of three highly interactive tabs, demonstrating different phases of the data science lifecycle.
 
 <table>
   <tr>
@@ -83,7 +92,8 @@ You enter things you'd actually know about your job (title, industry, salary, ex
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │                        DATA LAYER                           │
-│   data.csv — 30,000 job records × 13 raw columns           │
+│   data.csv — 702 real U.S. occupations × 4 columns         │
+│   Source: Frey & Osborne (2013) via Plotly open datasets    │
 └────────────────────────────┬────────────────────────────────┘
                              │
                              ▼
@@ -92,16 +102,12 @@ You enter things you'd actually know about your job (title, industry, salary, ex
 │                                                             │
 │  1. Drop missing rows (dropna)                              │
 │  2. Target Engineering:                                     │
-│       Automation Risk (%) → Risk_Grade (0–4)                │
-│  3. Feature Selection — 8 features used:                    │
-│       Text:   Job Title, Industry, Job Status,              │
-│               Required Education, Location                  │
-│       Number: Median Salary, Experience, Remote Ratio       │
-│       ✗ Excluded: AI Impact Level (circular),               │
-│                   Job Openings/Projected (macro data),      │
-│                   Gender Diversity (aggregate stat)         │
+│       probability (0.0–1.0) → Risk_Grade (0–4)              │
+│  3. Feature Selection — 3 features used:                    │
+│       Text:   occupation, education                         │
+│       Number: average_ann_wage                              │
 │  4. Label Encoding (text → integers, saved per column)      │
-│  5. StandardScaler (numbers → mean=0, std=1, saved)         │
+│  5. StandardScaler (wage → mean=0, std=1, saved)            │
 │  6. Train/Test Split (80% / 20%, random_state=42)           │
 └────────────────────────────┬────────────────────────────────┘
                              │
@@ -112,14 +118,14 @@ You enter things you'd actually know about your job (title, industry, salary, ex
 │   ┌──────────────┐  ┌──────────────┐  ┌────────────────┐   │
 │   │ Random Forest│  │  Neural Net  │  │ Decision Tree  │   │
 │   │ 100 trees    │  │  (100, 50)   │  │ baseline +     │   │
-│   │ 🏆 Best      │  │  MLP, 500 it │  │ tuned version  │   │
+│   │ balanced     │  │  MLP, 500 it │  │ tuned version  │   │
 │   └──────────────┘  └──────────────┘  └────────────────┘   │
 │                      ┌─────────────┐                        │
 │                      │ Naive Bayes │                        │
-│                      │ GaussianNB  │                        │
+│                      │ 🏆 Best     │                        │
 │                      └─────────────┘                        │
 │                                                             │
-│   All trained on 24,000 samples, evaluated on 6,000         │
+│   All trained on 561 samples, evaluated on 141              │
 └────────────────────────────┬────────────────────────────────┘
                              │
                              ▼
@@ -127,11 +133,11 @@ You enter things you'd actually know about your job (title, industry, salary, ex
 │                   APPLICATION LAYER (app.py)                │
 │                                                             │
 │  Tab 1 — Data Explorer                                      │
-│    • Risk score distribution (histogram)                    │
-│    • Class balance (donut chart)                            │
-│    • Salary by risk grade (boxplot)                         │
-│    • Top industries (bar chart)                             │
-│    • AI Impact vs Risk Grade (stacked bar)                  │
+│    • Automation probability distribution (histogram)        │
+│    • Class balance by Risk Grade (donut chart)              │
+│    • Wage by risk grade (boxplot)                           │
+│    • Education level vs automation risk (bar chart)         │
+│    • Top occupations by risk (bar chart)                    │
 │    • Correlation heatmap                                    │
 │                                                             │
 │  Tab 2 — Model Lab                                          │
@@ -140,7 +146,7 @@ You enter things you'd actually know about your job (title, industry, salary, ex
 │    • Algorithm explainer                                    │
 │                                                             │
 │  Tab 3 — Risk Analyzer                                      │
-│    • 8-field input form (user-known info only)              │
+│    • 3-field input form (occupation, education, wage)        │
 │    • Live prediction via selected model                     │
 │    • Gauge chart + color-coded result card                  │
 │    • Per-class probability bars                             │
@@ -152,12 +158,12 @@ You enter things you'd actually know about your job (title, industry, salary, ex
 ## 🔄 ML Pipeline
 
 ```
-Raw Input (8 fields)
+Raw Input (3 fields)
         │
         ├─ Text fields ──→ LabelEncoder (same fitted encoder from training)
-        │
-        ├─ Number fields ─→ StandardScaler (same fitted scaler from training)
-        │
+        │   (occupation, education)
+        ├─ Number field ─→ StandardScaler (same fitted scaler from training)
+        │   (average_ann_wage)
         └─ Feature vector ──→ Trained Model ──→ Risk Grade (0–4)
                                                        │
                                         ┌──────────────┴──────────────┐
@@ -168,35 +174,64 @@ Raw Input (8 fields)
                                             Gauge + Result Card + Probability Bars
 ```
 
-**Why these 8 features?** We only kept inputs a real person would know without looking up external databases:
+**Why these 3 features?** The Frey & Osborne dataset provides three features that are both personally known and empirically informative about automation risk:
 
-| ✅ Kept | ❌ Excluded | Reason for exclusion |
+| ✅ Used in Model | Type | Notes |
 |---|---|---|
-| Job Title | AI Impact Level | Circular — directly encodes the answer |
-| Industry | Job Openings (2024) | Macro BLS data, not personally known |
-| Job Status | Projected Openings (2030) | Same — requires external lookup |
-| Required Education | Gender Diversity (%) | Aggregate stat, not individual knowledge |
-| Median Salary (USD) | | |
-| Experience (Years) | | |
-| Remote Work Ratio (%) | | |
-| Location | | |
+| `occupation` | Text (categorical) | 702 real U.S. job titles from O*NET |
+| `education` | Text (categorical) | 8 education levels from No credential to Doctoral degree |
+| `average_ann_wage` | Numerical | Annual wage in USD; correlation with target: −0.550 |
 
 ---
 
-## 📊 Model Results
+## 📊 Model Results & Evaluation
 
-Evaluated on a 20% held-out test set (6,000 samples the models never saw during training):
+The models were evaluated on a 20% held-out test set (141 samples) that they never saw during training. All models use `class_weight='balanced'` to handle the unequal class distribution.
 
-| Rank | Model | Test Accuracy | Type |
+### Test Accuracy Summary
+
+| Rank | Model | Test Accuracy | Architecture / Type |
 |:---:|---|:---:|---|
-| 🥇 | **Random Forest** | Highest | Ensemble (100 trees) |
-| 🥈 | Neural Network (MLP) | ~Equal | Deep Learning (2 hidden layers) |
-| 🥉 | Decision Tree | ~Equal | Logic-based (tuned: max_depth=10) |
-| 4 | Naive Bayes | ~Equal | Probabilistic baseline |
+| 🥇 | **Naive Bayes** | **~58.2%** | Gaussian Naive Bayes with balanced class weights |
+| 🥈 | **Neural Network (MLP)** | **~56.0%** | Multi-Layer Perceptron (100, 50 hidden layers) |
+| 🥉 | **Random Forest** | **~54.6%** | Ensemble of 100 decision trees, balanced |
+| 4 | **Decision Tree** | **~48.9%** | Pruned tree (`max_depth=10`, `min_samples_split=10`) |
 
-> **Honest note:** All models hover near ~20% accuracy — equivalent to random chance on a balanced 5-class problem. This is not a bug in the code. It's a property of the dataset: the `Automation Risk (%)` column was generated synthetically and has near-zero correlation with the other features. The correlation heatmap in the Data Explorer tab shows this clearly. The ML pipeline is correct; the data simply has no learnable signal. A real-world dataset with genuine feature-target relationships would produce much higher accuracy.
+---
 
-> **Random Forest** is still designated the best model: it has the most stable behavior, the smallest overfitting gap among tree-based methods, and supports `predict_proba()` for the confidence visualization.
+### Detailed Classification Report (Best Model: Naive Bayes)
+
+```
+              precision    recall  f1-score   support
+
+    Very Safe       0.65      0.62      0.63        42
+         Safe       0.35      0.31      0.33        13
+     Moderate       0.30      0.33      0.31        12
+    High Risk       0.52      0.57      0.54        21
+     Critical       0.72      0.70      0.71        53
+
+     accuracy                           0.58       141
+    macro avg       0.51      0.51      0.51       141
+weighted avg       0.59      0.58      0.58       141
+```
+
+### Key Metrics Definition
+* **Precision ($TP / (TP + FP)$):** Out of all roles predicted to be in risk class X, what percentage actually were? High precision implies a low false positive rate.
+* **Recall ($TP / (TP + FN)$):** Out of all actual roles in risk class X, what percentage did the model correctly identify? High recall implies a low false negative rate.
+* **F1-Score ($2 \times \frac{\text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}}$):** The harmonic mean of Precision and Recall. Provides a balanced metric for each class.
+
+---
+
+### About the Dataset and Results
+
+The models achieve **~55–58% test accuracy** — well above the random-chance baseline of 20% for a 5-class problem. This meaningful accuracy stems from real, embedded correlations in the Frey & Osborne dataset:
+
+1. **Strong Salary Signal:** Annual wage has a Pearson correlation of **−0.550** with automation probability. Higher-wage occupations are consistently lower-risk (e.g., Doctoral degree roles average only 8.8% risk vs. 78.2% for roles requiring no formal credential).
+2. **Real-World Data:** The target `probability` values were derived by Frey & Osborne from a Gaussian process classifier trained on O*NET task and skill features — they genuinely reflect occupational characteristics, not random generation.
+3. **Class Imbalance Handled:** The dataset has unequal class counts (Grade 0: 207, Grade 1: 66, Grade 2: 60, Grade 3: 107, Grade 4: 262). All models use `class_weight='balanced'` to prevent majority-class dominance and maintain per-class learning signal.
+4. **Small Dataset Constraint:** With only 702 occupations (561 train, 141 test), complex models like Random Forest have less data to exploit than simpler probabilistic models like Naive Bayes, which is why Naive Bayes is the top performer here.
+
+---
 
 ---
 
@@ -221,7 +256,7 @@ will-i-get-fired/
 │
 ├── app.py               ← Streamlit frontend (UI, charts, prediction form)
 ├── model_utils.py       ← Backend ML logic (data loading, training, caching)
-├── data.csv             ← Dataset: 30,000 jobs × 13 features
+├── data.csv             ← Dataset: 702 real U.S. occupations × 4 columns (Frey & Osborne 2013)
 ├── requirements.txt     ← Python dependencies
 │
 ├── tests/
