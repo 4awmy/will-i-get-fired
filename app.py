@@ -233,7 +233,7 @@ def main():
     c1, c2, c3, c4 = st.columns(4)
     for col, val, lbl in zip(
         [c1, c2, c3, c4],
-        ["30 K", "12", "4", "5"],
+        ["30 K", "8", "4", "5"],
         ["Jobs in Dataset", "Features Used", "ML Models", "Risk Levels"],
     ):
         col.markdown(stat_card(val, lbl), unsafe_allow_html=True)
@@ -427,13 +427,11 @@ def main():
             st.markdown('<div class="section-title">Job Parameters</div>', unsafe_allow_html=True)
 
             with st.container():
-                selected_job      = st.selectbox("Job Title",            get_options("Job Title"))
-                selected_industry = st.selectbox("Industry",             get_options("Industry"))
-                c_a, c_b = st.columns(2)
-                selected_status   = c_a.selectbox("Job Status",          get_options("Job Status"))
-                selected_ai       = c_b.selectbox("AI Impact Level",     get_options("AI Impact Level"))
-                selected_edu      = st.selectbox("Required Education",   get_options("Required Education"))
-                selected_loc      = st.selectbox("Location",             get_options("Location"))
+                selected_job      = st.selectbox("Job Title",          get_options("Job Title"))
+                selected_industry = st.selectbox("Industry",           get_options("Industry"))
+                selected_status   = st.selectbox("Job Status",         get_options("Job Status"))
+                selected_edu      = st.selectbox("Required Education", get_options("Required Education"))
+                selected_loc      = st.selectbox("Location",           get_options("Location"))
 
             st.markdown('<div class="section-title">Numeric Details</div>', unsafe_allow_html=True)
 
@@ -441,9 +439,6 @@ def main():
                                     format="$%d")
             experience  = st.slider("Experience Required (Years)", 0, 25, 5)
             remote      = st.slider("Remote Work Ratio (%)",       0, 100, 30)
-            n1, n2 = st.columns(2)
-            openings_curr = n1.number_input("Job Openings (2024)", 0, 100_000, 2_000, 100)
-            openings_proj = n2.number_input("Projected (2030)",    0, 100_000, 2_500, 100)
 
             st.markdown('<div class="section-title">Model</div>', unsafe_allow_html=True)
             model_choice  = st.selectbox("Choose Model", list(trained_models.keys()))
@@ -460,13 +455,10 @@ def main():
                         "Job Title":                  encoders["Job Title"].transform([selected_job])[0],
                         "Industry":                   encoders["Industry"].transform([selected_industry])[0],
                         "Job Status":                 encoders["Job Status"].transform([selected_status])[0],
-                        "AI Impact Level":            encoders["AI Impact Level"].transform([selected_ai])[0],
                         "Required Education":         encoders["Required Education"].transform([selected_edu])[0],
                         "Location":                   encoders["Location"].transform([selected_loc])[0],
                         "Median Salary (USD)":        salary,
                         "Experience Required (Years)": experience,
-                        "Job Openings (2024)":        openings_curr,
-                        "Projected Openings (2030)":  openings_proj,
                         "Remote Work Ratio (%)":      remote,
                     }
 

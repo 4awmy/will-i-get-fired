@@ -9,14 +9,13 @@ from sklearn.preprocessing import LabelEncoder, StandardScaler
 
 # Define features and scaling columns globally or as constants so they can be imported
 FEATURE_COLS = [
-    'Job Title', 'Industry', 'Job Status', 'AI Impact Level',
+    'Job Title', 'Industry', 'Job Status',
     'Median Salary (USD)', 'Required Education', 'Experience Required (Years)',
-    'Job Openings (2024)', 'Projected Openings (2030)', 'Remote Work Ratio (%)', 'Location'
+    'Remote Work Ratio (%)', 'Location'
 ]
 
 NUM_COLS_TO_SCALE = [
     'Median Salary (USD)', 'Experience Required (Years)',
-    'Job Openings (2024)', 'Projected Openings (2030)',
     'Remote Work Ratio (%)'
 ]
 
