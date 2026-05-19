@@ -157,11 +157,11 @@ RISK_CONFIG = {
 }
 
 def grade_label(risk):
-    if risk <= 20:   return "Very Safe"
-    elif risk <= 40: return "Safe"
-    elif risk <= 60: return "Moderate"
-    elif risk <= 80: return "High Risk"
-    else:            return "Critical"
+    if risk <= 0.2:   return "Very Safe"
+    elif risk <= 0.4: return "Safe"
+    elif risk <= 0.6: return "Moderate"
+    elif risk <= 0.8: return "High Risk"
+    else:             return "Critical"
 
 def stat_card(value, label):
     return f"""
@@ -233,7 +233,7 @@ def main():
     c1, c2, c3, c4 = st.columns(4)
     for col, val, lbl in zip(
         [c1, c2, c3, c4],
-        ["30 K", "8", "4", "5"],
+        ["702", "3", "4", "5"],
         ["Jobs in Dataset", "Features Used", "ML Models", "Risk Levels"],
     ):
         col.markdown(stat_card(val, lbl), unsafe_allow_html=True)
@@ -248,7 +248,9 @@ def main():
     # ══════════════════════════════════════════════════════════════════════════
     with tab1:
         df_viz = df_original.copy()
-        df_viz["Risk Grade"] = df_original["Automation Risk (%)"].apply(grade_label)
+        df_viz["Risk Grade"] = df_original["probability"].apply(grade_label)
+        order = ["Very Safe", "Safe", "Moderate", "High Risk", "Critical"]
+        grade_colors = ["#10b981","#84cc16","#f59e0b","#ef4444","#a855f7"]
 
         # Dataset overview
         col_l, col_r = st.columns([1, 1])
@@ -259,12 +261,12 @@ def main():
             mc2.metric("Columns", df_original.shape[1])
             mc3.metric("Missing", df_original.isnull().sum().sum())
             with st.expander("📄 View raw data (first 10 rows)"):
-                st.dataframe(df_original.head(10), use_container_width=True)
+                st.dataframe(df_original[["occupation","education","average_ann_wage","probability"]].head(10), use_container_width=True)
 
         with col_r:
             st.markdown('<div class="section-title">Summary Statistics</div>', unsafe_allow_html=True)
             st.dataframe(
-                df_original.describe().style.format("{:.1f}"),
+                df_original[["probability","average_ann_wage","numbEmployed"]].describe().style.format("{:.2f}"),
                 use_container_width=True, height=280,
             )
 
@@ -276,8 +278,9 @@ def main():
 
         with r1c1:
             fig = px.histogram(
-                df_original, x="Automation Risk (%)", nbins=25,
-                title="Risk Score Distribution",
+                df_original, x="probability", nbins=25,
+                title="Automation Probability Distribution",
+                labels={"probability": "Automation Probability (0–1)"},
                 color_discrete_sequence=["#818cf8"],
                 template="plotly_dark",
             )
@@ -287,13 +290,12 @@ def main():
         with r1c2:
             grade_counts = df_viz["Risk Grade"].value_counts().reset_index()
             grade_counts.columns = ["Risk Grade", "Count"]
-            order = ["Very Safe", "Safe", "Moderate", "High Risk", "Critical"]
             grade_counts["Risk Grade"] = pd.Categorical(grade_counts["Risk Grade"], categories=order, ordered=True)
             grade_counts = grade_counts.sort_values("Risk Grade")
             fig = px.pie(
                 grade_counts, names="Risk Grade", values="Count",
-                title="Class Balance (Risk Grades)",
-                color_discrete_sequence=["#10b981","#84cc16","#f59e0b","#ef4444","#a855f7"],
+                title="Class Distribution (Risk Grades)",
+                color_discrete_sequence=grade_colors,
                 template="plotly_dark",
                 hole=0.4,
             )
@@ -306,25 +308,27 @@ def main():
 
         with r2c1:
             fig = px.box(
-                df_viz, x="Risk Grade", y="Median Salary (USD)",
+                df_viz, x="Risk Grade", y="average_ann_wage",
                 category_orders={"Risk Grade": order},
-                title="Salary Distribution by Risk Grade",
+                title="Annual Wage by Risk Grade",
+                labels={"average_ann_wage": "Average Annual Wage (USD)"},
                 color="Risk Grade",
-                color_discrete_sequence=["#10b981","#84cc16","#f59e0b","#ef4444","#a855f7"],
+                color_discrete_sequence=grade_colors,
                 template="plotly_dark",
             )
             fig.update_layout(showlegend=False, title_font_size=14)
             st.plotly_chart(fig, use_container_width=True)
 
         with r2c2:
-            top_ind = df_original["Industry"].value_counts().head(10).reset_index()
-            top_ind.columns = ["Industry", "Count"]
+            edu_avg = df_viz.groupby("education")["probability"].mean().reset_index()
+            edu_avg.columns = ["Education Level", "Avg Automation Probability"]
+            edu_avg = edu_avg.sort_values("Avg Automation Probability", ascending=True)
             fig = px.bar(
-                top_ind.sort_values("Count"), x="Count", y="Industry",
+                edu_avg, x="Avg Automation Probability", y="Education Level",
                 orientation="h",
-                title="Top 10 Industries by Job Count",
-                color="Count",
-                color_continuous_scale="Bluyl",
+                title="Automation Risk by Education Level",
+                color="Avg Automation Probability",
+                color_continuous_scale="RdYlGn_r",
                 template="plotly_dark",
             )
             fig.update_layout(coloraxis_showscale=False, title_font_size=14)
@@ -334,20 +338,21 @@ def main():
         r3c1, r3c2 = st.columns(2)
 
         with r3c1:
-            ai_risk = df_viz.groupby(["AI Impact Level","Risk Grade"]).size().reset_index(name="Count")
+            top_risky = df_original.nlargest(10, "probability")[["occupation","probability"]]
             fig = px.bar(
-                ai_risk, x="AI Impact Level", y="Count", color="Risk Grade",
-                barmode="stack",
-                title="AI Impact Level vs Risk Grade",
-                category_orders={"Risk Grade": order},
-                color_discrete_sequence=["#10b981","#84cc16","#f59e0b","#ef4444","#a855f7"],
+                top_risky.sort_values("probability"), x="probability", y="occupation",
+                orientation="h",
+                title="Top 10 Most At-Risk Jobs",
+                labels={"probability": "Automation Probability", "occupation": ""},
+                color="probability",
+                color_continuous_scale="Reds",
                 template="plotly_dark",
             )
-            fig.update_layout(title_font_size=14)
+            fig.update_layout(coloraxis_showscale=False, title_font_size=14)
             st.plotly_chart(fig, use_container_width=True)
 
         with r3c2:
-            num_cols = df_original.select_dtypes(include=[np.number]).columns.tolist()
+            num_cols = ["probability", "average_ann_wage", "numbEmployed", "median_ann_wage"]
             corr = df_original[num_cols].corr()
             fig = px.imshow(
                 corr, text_auto=".2f", aspect="auto",
@@ -427,18 +432,13 @@ def main():
             st.markdown('<div class="section-title">Job Parameters</div>', unsafe_allow_html=True)
 
             with st.container():
-                selected_job      = st.selectbox("Job Title",          get_options("Job Title"))
-                selected_industry = st.selectbox("Industry",           get_options("Industry"))
-                selected_status   = st.selectbox("Job Status",         get_options("Job Status"))
-                selected_edu      = st.selectbox("Required Education", get_options("Required Education"))
-                selected_loc      = st.selectbox("Location",           get_options("Location"))
+                selected_occ = st.selectbox("Occupation", get_options("occupation"))
+                selected_edu = st.selectbox("Education Level", get_options("education"))
 
-            st.markdown('<div class="section-title">Numeric Details</div>', unsafe_allow_html=True)
+            st.markdown('<div class="section-title">Salary</div>', unsafe_allow_html=True)
 
-            salary      = st.slider("Median Salary (USD)",         10_000, 200_000, 70_000, 1_000,
-                                    format="$%d")
-            experience  = st.slider("Experience Required (Years)", 0, 25, 5)
-            remote      = st.slider("Remote Work Ratio (%)",       0, 100, 30)
+            salary = st.slider("Average Annual Wage (USD)", 20_000, 200_000, 70_000, 1_000,
+                                format="$%d")
 
             st.markdown('<div class="section-title">Model</div>', unsafe_allow_html=True)
             model_choice  = st.selectbox("Choose Model", list(trained_models.keys()))
@@ -452,14 +452,9 @@ def main():
             if analyze_btn:
                 try:
                     input_dict = {
-                        "Job Title":                  encoders["Job Title"].transform([selected_job])[0],
-                        "Industry":                   encoders["Industry"].transform([selected_industry])[0],
-                        "Job Status":                 encoders["Job Status"].transform([selected_status])[0],
-                        "Required Education":         encoders["Required Education"].transform([selected_edu])[0],
-                        "Location":                   encoders["Location"].transform([selected_loc])[0],
-                        "Median Salary (USD)":        salary,
-                        "Experience Required (Years)": experience,
-                        "Remote Work Ratio (%)":      remote,
+                        "occupation":        encoders["occupation"].transform([selected_occ])[0],
+                        "education":         encoders["education"].transform([selected_edu])[0],
+                        "average_ann_wage":  salary,
                     }
 
                     input_df   = pd.DataFrame([input_dict])
