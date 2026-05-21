@@ -252,7 +252,7 @@ The models achieve **~55–58% test accuracy** — well above the random-chance 
 ## 📁 Project Structure
 
 ```
-will-i-get-fired/
+WillIGetFired/
 │
 ├── app.py               ← Streamlit frontend (UI, charts, prediction form)
 ├── model_utils.py       ← Backend ML logic (data loading, training, caching)
@@ -288,8 +288,8 @@ will-i-get-fired/
 
 **Step 1 — Clone:**
 ```bash
-git clone https://github.com/4awmy/will-i-get-fired.git
-cd will-i-get-fired
+git clone https://github.com/4awmy/WillIGetFired.git
+cd WillIGetFired
 ```
 
 **Step 2 — Install dependencies:**
